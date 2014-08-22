@@ -1,0 +1,43 @@
+# Mac OS
+.DS_Store
+
+# Unity
+Builds/
+Temp/
+Library/
+
+# MonoDevelop IDE leavings...
+*.pidb
+*.userprefs
+*.csproj
+*.sln
+*.unityproj
+
+# Debugging symbols...
+*.pdb
+*.mdb
+
+# Xcode
+*/build/*
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata
+profile
+*.moved-aside
+DerivedData
+.idea/
+*.hmap
+*.xccheckout
+
+# Unity iOS lib that is too big to be pushed to GitHub 
+# (splitted files committed instead)
+FuffrIOS/Libraries/libiPhone-lib.a
+
+#CocoaPods
+Pods
