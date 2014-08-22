@@ -297,6 +297,8 @@ void UnityInitJoysticks();
 
 - (void) touchesBegan: (NSSet*)touches
 {
+	UnitySendMessage("FuffrCube", "fuffrTouchEvent", "C# Touch Began");
+
 	for (FFRTouch* touch in touches)
 	{
 		NSLog(@"Touch began");
@@ -305,6 +307,8 @@ void UnityInitJoysticks();
 
 - (void) touchesMoved: (NSSet*)touches
 {
+	UnitySendMessage("FuffrCube", "fuffrTouchEvent", "C# Touch Moved");
+
 	for (FFRTouch* touch in touches)
 	{
 		NSLog(@"Touch moved");
@@ -313,6 +317,8 @@ void UnityInitJoysticks();
 
 - (void) touchesEnded: (NSSet*)touches
 {
+	UnitySendMessage("FuffrCube", "fuffrTouchEvent", "C# Touch Ended");
+
 	for (FFRTouch* touch in touches)
 	{
 		NSLog(@"Touch ended");
