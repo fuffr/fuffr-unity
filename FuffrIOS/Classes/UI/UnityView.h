@@ -7,9 +7,15 @@
 @interface UnityView : GLView
 {
 }
+// we take scale factor into account because gl backbuffer size depends on it
+- (id)initWithFrame:(CGRect)frame scaleFactor:(CGFloat)scale;
 - (id)initWithFrame:(CGRect)frame;
+- (id)initFromMainScreen;
+
 - (void)layoutSubviews;
 
+// please note that it is "orientation if was full-screen view"
+// due to changing view extents, script-side orientation might be different
 - (ScreenOrientation)contentOrientation;
 
 // layoutSubviews can be called from non-main thread, so we only set flag here
@@ -17,8 +23,9 @@
 // didRotate will recreate gles surface is needed (call this from view controller didRotateFromInterfaceOrientation)
 // if you want to simply reorient view (outside of view controller orientation handling) you can do:
 // willRotateTo
-// reorient view (AppController.orientView)
+// OrientView
 // didRotate
+// you can use [UnityAppContoller onForcedOrientation] for main view
 - (void)willRotateTo:(ScreenOrientation)orientation;
 - (void)didRotate;
 

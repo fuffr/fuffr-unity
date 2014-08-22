@@ -12,8 +12,8 @@
 #endif
 
 // NOT the best way but apple do not care about adding extensions properly
-#if __clang_major__ < 3
-#error please use xcode 4.2 or newer
+#if __clang_major__ < 5
+#error please use xcode 5.0 or newer
 #endif
 
 #if !defined(__IPHONE_5_0) || __IPHONE_OS_VERSION_MAX_ALLOWED < __IPHONE_5_0

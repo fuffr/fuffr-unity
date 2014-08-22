@@ -4,7 +4,11 @@
 #include <string>
 
 // WARNING: this MUST be c decl (NSString ctor will be called after +load, so we cant really change its value)
-const char* WWWDelegateClassName 		= "UnityWWWConnectionSelfSignedCertDelegate";
+// If you need to communicate with HTTPS server with self signed certificate
+// you might consider UnityWWWConnectionSelfSignedCertDelegate. Though use it on your own
+// risk. Blindly accepting self signed certificate is prone to MITM attack
+//const char* WWWDelegateClassName 		= "UnityWWWConnectionSelfSignedCertDelegate";
+const char* WWWDelegateClassName 		= "UnityWWWConnectionDelegate";
 const char* WWWRequestProviderClassName = "UnityWWWRequestDefaultProvider";
 
 @interface UnityWWWConnectionDelegate()
@@ -33,6 +37,7 @@ const char* WWWRequestProviderClassName = "UnityWWWRequestDefaultProvider";
 	NSString* 			_responseHeader;
 	int					_status;
 	size_t				_estimatedLength;
+	int					_retryCount;
 
 	// data
 	NSMutableData*		_data;
@@ -64,6 +69,7 @@ const char* WWWRequestProviderClassName = "UnityWWWRequestDefaultProvider";
 
 - (id)initWithURL:(NSURL*)url udata:(void*)udata;
 {
+	self->_retryCount = 0;
 	if((self = [super init]))
 	{
 		self.url	= url.user != nil ? [self extractUserPassFromUrl:url] : url;
@@ -92,6 +98,15 @@ const char* WWWRequestProviderClassName = "UnityWWWRequestDefaultProvider";
 	NSAssert([target conformsToProtocol:@protocol(UnityWWWRequestProvider)], @"You MUST implement UnityWWWRequestProvider protocol");
 
 	return [target allocRequestForHTTPMethod:method url:url headers:headers];
+}
+
+- (void)cleanup
+{
+	[_connection cancel];
+	_connection = nil;
+
+	[_data release];
+	_data = nil;
 }
 
 
@@ -176,6 +191,15 @@ const char* WWWRequestProviderClassName = "UnityWWWRequestDefaultProvider";
 
 	if(authHandled == NO)
 	{
+		self->_retryCount++;
+
+		// Empty user or password
+		if (self->_retryCount > 1 || self.user == nil || [self.user length] == 0 || self.password == nil || [self.password length]  == 0)
+		{
+			[[challenge sender] cancelAuthenticationChallenge:challenge];
+			return;
+		}
+
 		NSURLCredential* newCredential =
 			[NSURLCredential credentialWithUser:self.user password:self.password persistence:NSURLCredentialPersistenceNone];
 
@@ -254,8 +278,7 @@ extern "C" void UnityDestroyWWWConnection(void* connection)
 {
 	UnityWWWConnectionDelegate* delegate = (UnityWWWConnectionDelegate*)connection;
 
-	[delegate.connection cancel];
-	delegate.connection = nil;
+	[delegate cleanup];
 	[delegate release];
 }
 

@@ -4,7 +4,7 @@
 #include "CVTextureCache.h"
 #include "GLESHelper.h"
 
-#include <OpenGLES/ES2/gl.h>
+#include <OpenGLES/ES2/glext.h>
 #include <AVFoundation/AVFoundation.h>
 
 void CMVideoSampling_Initialize(CMVideoSampling* sampling)

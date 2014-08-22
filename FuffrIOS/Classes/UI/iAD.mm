@@ -1,7 +1,9 @@
 
-#include "iPhone_View.h"
 #include "iPhone_OrientationSupport.h"
 #include "iAD.h"
+
+#include "UnityAppController+ViewHandling.h"
+#include "UnityView.h"
 
 
 #if UNITY_PRE_IOS6_SDK
@@ -29,7 +31,7 @@
 	else
 		_view = [[ADBannerView alloc] init];
 
-	SetScaleFactorFromScreen(_view);
+	_view.contentScaleFactor = [UIScreen mainScreen].scale;
 	_view.bounds = parent.bounds;
 	_view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 
@@ -189,7 +191,7 @@
 	if(_showingBanner)
 		_view.hidden = NO;
 
-	[self orientBannerImpl: ((UIViewController*)notification.object).interfaceOrientation];
+	[self orientBannerImpl: ConvertToIosScreenOrientation(((UnityView*)notification.object).contentOrientation)];
 	[self layoutBannerImpl];
 }
 
@@ -221,6 +223,7 @@
 
 - (void)bannerViewActionDidFinish:(ADBannerView*)banner
 {
+	[GetAppController() updateOrientationFromController:UnityGetGLViewController()];
 	UnityPause(false);
 	UnityADBannerViewWasClicked();
 }
@@ -304,6 +307,8 @@
 
 - (void)interstitialAdDidUnload:(ADInterstitialAd*)interstitialAd
 {
+	[GetAppController() updateOrientationFromController:UnityGetGLViewController()];
+
 	UnityPause(false);
 	if(_autoReload)	[self reloadAD];
 	else			[self unloadAD];
@@ -311,6 +316,8 @@
 
 - (void)interstitialAdActionDidFinish:(ADInterstitialAd*)interstitialAd
 {
+	[GetAppController() updateOrientationFromController:UnityGetGLViewController()];
+
 	UnityPause(false);
 	if(_autoReload)	[self reloadAD];
 	else			[self unloadAD];

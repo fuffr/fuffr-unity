@@ -25,8 +25,8 @@ EAGLContext* CreateContext(EAGLContext* parent)
     }
     else
     {
-        // we do not support gles1.1 anymore, but leave the code structire as is to be ready for gles3 when it arrives
-        for(int api = kEAGLRenderingAPIOpenGLES2 ; api >= kEAGLRenderingAPIOpenGLES2 && !ret ; --api)
+    	const int startApi = _ios70orNewer ? kEAGLRenderingAPIOpenGLES3 : kEAGLRenderingAPIOpenGLES2;
+        for(int api = startApi ; api >= kEAGLRenderingAPIOpenGLES2 && !ret ; --api)
         {
             if (UnityIsRenderingAPISupported(api))
                 ret = [[EAGLContext alloc] initWithAPI:api];

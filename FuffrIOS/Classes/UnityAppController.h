@@ -3,19 +3,23 @@
 
 
 #import <UIKit/UIKit.h>
-#include "iPhone_Common.h"
+#import <QuartzCore/CADisplayLink.h>
+
 #include "PluginBase/RenderPluginDelegate.h"
 
-// it is the unity rendering view class
-// if you want custom view logic, you should subclass UnityView
 @class UnityView;
+@class DisplayConnection;
 
 @interface UnityAppController : NSObject<UIApplicationDelegate>
 {
 	UnityView*			_unityView;
+	CADisplayLink*		_displayLink;
 
+	UIWindow*			_window;
 	UIView*				_rootView;
 	UIViewController*	_rootController;
+
+	DisplayConnection*	_mainDisplay;
 
 
 	id<RenderPluginDelegate>	_renderDelegate;
@@ -24,37 +28,30 @@
 // override it to add your render plugin delegate
 - (void)shouldAttachRenderDelegate;
 
-// this one is called at the very end of didFinishLaunchingWithOptions:, just before firing off startUnity
+// this one is called at the very end of didFinishLaunchingWithOptions:
+// after views have been created but before initing engine itself
 - (void)preStartUnity;
-// this one is called at the very end of didFinishLaunchingWithOptions:, after view hierarchy been created
-// NB: it will be started with delay 0: next run loop itration
+// this one is called at first applicationDidBecomeActive
+// NB: it will be started with delay 0, so it will run on next run loop iteration
+// this is done to make sure that activity indicator animation starts before blocking loading
 - (void)startUnity:(UIApplication*)application;
-// this is one is passed to CADisplayLink
-- (void)repaintDisplayLink;
-// this is unity frame processing (called from repaintDisplayLink)
-- (void)repaint;
-
-// override this only if you need customized unityview
-- (UnityView*)initUnityViewImpl;
-
-// override this to tweak unity view hierarchy
-// _unityView will be inited
-// you need to init _rootView and _rootController
-- (void)createViewHierarchyImpl;
-
-// you should not override these methods in usual case
-- (UnityView*)initUnityView;
-- (void)createViewHierarchy;
-- (void)showGameUI:(UIWindow*)window;
 
 // in general this method just works, so override it only if you have very special reorientation logic
+// do not forget to call [UnityView willRotate] and [UnityView didRotate] inside
 - (void)onForcedOrientation:(ScreenOrientation)orient;
 
-@property (readonly, copy, nonatomic) UnityView*		unityView;
-@property (readonly, copy, nonatomic) UIView*			rootView;
-@property (readonly, copy, nonatomic) UIViewController*	rootViewController;
+// this is a part of UIApplicationDelegate protocol starting with ios5
+// setter will be generated empty
+@property (retain, nonatomic) UIWindow*	window;
 
-@property(nonatomic, retain) id renderDelegate;
+@property (readonly, copy, nonatomic) UnityView*			unityView;
+@property (readonly, copy, nonatomic) CADisplayLink*		unityDisplayLink;
+
+@property (readonly, copy, nonatomic) UIView*				rootView;
+@property (readonly, copy, nonatomic) UIViewController*		rootViewController;
+@property (readonly, copy, nonatomic) DisplayConnection*	mainDisplay;
+
+@property (nonatomic, retain) id renderDelegate;
 
 @end
 
@@ -86,7 +83,6 @@ void AppController_RenderPluginMethodWithArg(SEL method, id arg);
 // these are simple wrappers about ios api, added for convenience
 void AppController_SendNotification(NSString* name);
 void AppController_SendNotificationWithArg(NSString* name, id arg);
-
 
 
 #endif // _TRAMPOLINE_UNITYAPPCONTROLLER_H_

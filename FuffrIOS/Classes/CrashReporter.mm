@@ -3,7 +3,11 @@
 #import "CrashReporter.h"
 
 
-NSString* GetCrashReportsPath();
+extern NSString* GetCrashReportsPath();
+void CrashedCheckBellowForHintsWhy();
+
+
+static NSUncaughtExceptionHandler* gsCrashReporterUEHandler = NULL;
 
 
 static void SavePendingCrashReport()
@@ -33,7 +37,7 @@ static void SavePendingCrashReport()
 	file = [file stringByAppendingString:@".plcrash"];
 	if ([data writeToFile:file atomically:YES])
 	{
-		printf_console("CrashReporter: saved pending crash report.");
+		printf_console("CrashReporter: saved pending crash report.\n");
 		if (![[UnityPLCrashReporter sharedReporter] purgePendingCrashReportAndReturnError: &error])
 		{
 			printf_console("CrashReporter: couldn't remove pending report: %s\n", [[error localizedDescription] UTF8String]);
@@ -41,20 +45,49 @@ static void SavePendingCrashReport()
 	}
 	else
 	{
-		printf_console("CrashReporter: couldn't save crash report.");
+		printf_console("CrashReporter: couldn't save crash report.\n");
 	}
 }
 
 
-void InitCrashReporter()
+static void InitCrashReporter()
 {
 	NSError *error;
 
-	if (![[UnityPLCrashReporter sharedReporter] enableCrashReporterAndReturnError: &error]) {
-		NSLog(@"Could not enable crash reporter: %@", error);
-	}
-
+	UnityInstallPostCrashCallback();
+	if ([[UnityPLCrashReporter sharedReporter] enableCrashReporterAndReturnError: &error])
+		printf_console("CrashReporter: initialized\n");
+	else
+		NSLog(@"CrashReporter: could not enable crash reporter: %@", error);
+	
 	SavePendingCrashReport();
+}
+
+
+static void UncaughtExceptionHandler(NSException *exception) {
+	NSLog(@"Uncaught exception: %@: %@\n%@", [exception name], [exception reason], [exception callStackSymbols]);
+	if (gsCrashReporterUEHandler)
+		gsCrashReporterUEHandler(exception);
+}
+
+
+static void InitObjCUEHandler()
+{
+	// Crash reporter sets its own handler, so we have to save it and call it manually
+	gsCrashReporterUEHandler = NSGetUncaughtExceptionHandler();
+	NSSetUncaughtExceptionHandler(&UncaughtExceptionHandler);
+}
+
+
+void InitCrashHandling()
+{
+#if ENABLE_CUSTOM_CRASH_REPORTER
+	InitCrashReporter();
+#endif
+
+#if ENABLE_OBJC_UNCAUGHT_EXCEPTION_HANDLER
+	InitObjCUEHandler();
+#endif
 }
 
 

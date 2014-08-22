@@ -1,7 +1,9 @@
 #include "iAD.h"
 
-UIViewController*   UnityGetGLViewController();
-UIView*             UnityGetGLView();
+
+extern "C" UIViewController*	UnityGetGLViewController();
+extern "C" UIView*				UnityGetGLView();
+
 
 //==============================================================================
 //

@@ -7,6 +7,7 @@
 	#import <UIKit/UIKit.h>
 #endif
 
+#include "Preprocessor.h"
 #include "UnityTrampolineConfigure.h"
 #include "iPhone_Common.h"
 #include "UnityInterface.h"

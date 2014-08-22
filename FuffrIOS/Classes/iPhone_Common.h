@@ -15,6 +15,7 @@
 	extern	bool	_ios50orNewer;
 	extern	bool	_ios60orNewer;
 	extern	bool	_ios70orNewer;
+	extern	bool	_ios80orNewer;
 #endif
 
 

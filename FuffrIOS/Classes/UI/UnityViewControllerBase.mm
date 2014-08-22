@@ -157,13 +157,10 @@ AddViewControllerAllDefaultImpl(Class targetClass)
 
 	ScreenOrientation orient = ConvertToUnityScreenOrientation(toInterfaceOrientation, 0);
 	[_unityView willRotateTo:orient];
-
-	[[NSNotificationCenter defaultCenter] postNotificationName:kUnityViewWillRotate object:self];
 }
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
 {
-	[[NSNotificationCenter defaultCenter] postNotificationName:kUnityViewDidRotate object:self];
 	[self.view layoutSubviews];
 	[_unityView didRotate];
 
@@ -171,3 +168,12 @@ AddViewControllerAllDefaultImpl(Class targetClass)
 }
 @end
 
+@implementation UnityDefaultViewController
+@end
+
+
+extern "C" void NotifyAutoOrientationChange()
+{
+	if([UIViewController respondsToSelector:@selector(attemptRotationToDeviceOrientation)])
+		[UIViewController attemptRotationToDeviceOrientation];
+}

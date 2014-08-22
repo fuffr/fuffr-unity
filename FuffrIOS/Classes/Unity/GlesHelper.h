@@ -22,14 +22,16 @@ UnityRenderingSurface
 	CAEAGLLayer*	layer;
 	EAGLContext*	context;
 
+	// CVOpenGLESTextureCache link
     void*   		cvTextureCache;			// CVOpenGLESTextureCacheRef
     void*   		cvTextureCacheTexture;	// CVOpenGLESTextureRef
     void*			cvPixelBuffer;			// CVPixelBufferRef
 
-
 	// unity RenderBuffer connection
 	void*			unityColorBuffer;
 	void*			unityDepthBuffer;
+	void*			systemColorBuffer;
+	void*			systemDepthBuffer;
 
 	// system FB
 	GLuint			systemFB;
@@ -52,10 +54,12 @@ UnityRenderingSurface
 	// target/msaa ext
 	unsigned		targetW, targetH;
 
-	GLuint			colorFormat, depthFormat;
-
+	//
+	GLuint			colorFormat;
+	GLuint			depthFormat;
 	int				msaaSamples;
 
+	//
 	bool 			use32bitColor;
 	bool 			use24bitDepth;
 	bool			allowScreenshot;
@@ -63,7 +67,7 @@ UnityRenderingSurface
 }
 UnityRenderingSurface;
 
-void InitGLES();
+void InitGLES(int api);
 
 // in:  layer, context, use32bitColor
 void CreateSystemRenderingSurface(UnityRenderingSurface* surface);

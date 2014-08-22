@@ -5,7 +5,9 @@
 #include "iPhone_Common.h"
 
 #ifdef __OBJC__
+	@class UIWindow;
 	@class UIView;
+	@class UIViewController;
 	@class UIEvent;
 	@class UILocalNotification;
 	@class NSDictionary;
@@ -13,7 +15,9 @@
 	@class NSError;
 	@class NSData;
 #else
+	typedef struct objc_object UIWindow;
 	typedef struct objc_object UIView;
+	typedef struct objc_object UIViewController;
 	typedef struct objc_object UIEvent;
 	typedef struct objc_object UILocalNotification;
 	typedef struct objc_object NSDictionary;
@@ -22,6 +26,14 @@
 	typedef struct objc_object NSData;
 #endif
 
+// unity plugin functions
+typedef	void	(*UnityPluginSetGraphicsDeviceFunc)(void* device, int deviceType, int eventType);
+typedef	void	(*UnityPluginRenderMarkerFunc)(int marker);
+
+
+//
+// these are functions referenced in trampoline and implemented in unity player lib
+//
 
 #ifdef __cplusplus
 extern "C" {
@@ -33,7 +45,8 @@ extern "C" {
 	extern void		UnityPause(bool pause);
 #endif
 
-extern void		UnityInitApplication(const char* appPathName);
+extern void		UnityInitApplicationNoGraphics(const char* appPathName);
+extern void		UnityInitApplicationGraphics();
 extern void		UnityCleanup();
 extern void		UnityLoadApplication();
 extern void		UnityPlayerLoop();
@@ -44,14 +57,20 @@ extern void		UnityInputProcess();
 #ifdef __cplusplus
 	extern bool		UnityIsRenderingAPISupported(int renderingApi);
 	extern bool		UnityHasRenderingAPIExtension(const char* extension);
-	extern void*	UnityCreateUpdateExternalColorSurface(int api, void* surf, unsigned texid, unsigned rbid, int width, int height, bool is32bit);
-	extern void*	UnityCreateUpdateExternalDepthSurface(int api, void* surf, unsigned texid, unsigned rbid, int width, int height, bool is24bit);
+	extern void*	UnityCreateUpdateExternalColorSurface(int api, void* surf, unsigned texid, unsigned rbid, int width, int height, bool is32bit, int samples, bool backbuffer);
+	extern void*	UnityCreateUpdateExternalDepthSurface(int api, void* surf, unsigned texid, unsigned rbid, int width, int height, bool is24bit, int samples, bool backbuffer);
 #endif
 
 extern void		UnityFinishRendering();
 extern void		UnityDestroyExternalColorSurface(int api, void* surf);
 extern void		UnityDestroyExternalDepthSurface(int api, void* surf);
 extern void		UnityDisableRenderBuffers(void* color, void* depth);
+extern void		UnityRegisterFBO(int api, void* color, void* depth, unsigned fbo);
+extern void		UnitySetDefaultFBO(int api, void* color, void* depth);
+
+
+// plugins support
+extern void		UnityRegisterRenderingPlugin(UnityPluginSetGraphicsDeviceFunc setDevice, UnityPluginRenderMarkerFunc renderMarker);
 
 
 // controling player internals
@@ -67,9 +86,13 @@ extern void		UnityCaptureScreenshot();
 
 
 // resolution handling
-extern void		UnityRequestRenderingResolution(unsigned w, unsigned h);
-extern void		UnityGetRenderingResolution(unsigned* w, unsigned* h);
 
+extern void		UnityGetRenderingResolution(unsigned* w, unsigned* h);
+extern void		UnityGetSystemResolution(unsigned* w, unsigned* h);
+extern void		UnityReportResizeView(unsigned w, unsigned h, unsigned /*ScreenOrientation*/ contentOrientation);
+extern void		UnityReportBackbufferChange(unsigned w, unsigned h);
+
+extern void		UnityRequestRenderingResolution(unsigned w, unsigned h);
 
 // orientation handling
 #ifdef __cplusplus
@@ -77,7 +100,6 @@ extern void		UnityGetRenderingResolution(unsigned* w, unsigned* h);
 #endif
 
 extern int		UnityRequestedScreenOrientation(); // returns ScreenOrientation
-extern void		UnitySetScreenOrientation(int/*ScreenOrientation*/ orientation);
 
 
 // player settings
@@ -182,6 +204,24 @@ extern void		UnitySendTouchesMoved(NSSet* touches, UIEvent* event);
 #endif
 
 
+//
+// these are functions referenced and implemented in trampoline
+//
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+UIViewController*		UnityGetGLViewController();
+UIView*					UnityGetGLView();
+UIWindow*				UnityGetMainWindow();
+enum ScreenOrientation	UnityCurrentOrientation();
+
+
+#ifdef __cplusplus
+}
+#endif
+
 
 //
 // these are functions referenced in unity player lib and implemented in trampoline
@@ -199,13 +239,18 @@ extern void		UnitySendTouchesMoved(NSSet* touches, UIEvent* event);
 
 // UnityAppController.mm
 // extern "C" int	CreateContext_UnityCallback(UIWindow** window, int* screenWidth, int* screenHeight, int* openglesVersion);
-// extern "C" int	GfxInited_UnityCallback(int screenWidth, int screenHeight);
-// extern "C" void	PresentContext_UnityCallback(struct UnityFrameStats const* frameStats);
-// extern "C" void	NotifyFramerateChange(int targetFPS)
 
-// iPhone_View.mm
+// UnityAppController+Rendering.mm
+// extern "C" void	GfxInited_UnityCallback();
+// extern "C" void	PresentContext_UnityCallback(struct UnityFrameStats const* frameStats);
+// extern "C" void	FramerateChange_UnityCallback(int targetFPS)
+
+
+// UI/ActivityIndicator.mm
 // extern "C" void	UnityStartActivityIndicator();
 // extern "C" void	UnityStopActivityIndicator();
+
+// UI/UnityViewControllerBase.mm
 // extern "C" void	NotifyAutoOrientationChange();
 
 // DeviceSettings.mm

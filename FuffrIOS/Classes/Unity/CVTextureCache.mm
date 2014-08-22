@@ -94,7 +94,7 @@ void* CreatePixelBufferForCVTextureCache(unsigned w, unsigned h)
 	NSDictionary* options = @{	(NSString*)kCVPixelBufferPixelFormatTypeKey : @(kCVPixelFormatType_32BGRA),
 								(NSString*)kCVPixelBufferWidthKey : @(w),
 								(NSString*)kCVPixelBufferHeightKey : @(h),
-								(NSString*)kCVPixelBufferOpenGLESCompatibilityKey : @YES,
+								(NSString*)kCVPixelBufferOpenGLESCompatibilityKey : @(YES),
 								(NSString*)kCVPixelBufferIOSurfacePropertiesKey : @{}
 							};
 #else

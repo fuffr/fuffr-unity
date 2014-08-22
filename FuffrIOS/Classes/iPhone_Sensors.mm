@@ -2,7 +2,6 @@
 #import <CoreLocation/CoreLocation.h>
 #import <CoreMotion/CoreMotion.h>
 
-#include "iPhone_View.h"
 #include "iPhone_OrientationSupport.h"
 #include "Unity/UnityInterface.h"
 

@@ -1,9 +1,9 @@
 
 #include "SplashScreen.h"
-#include "iPhone_View.h"
 #include "UnityViewControllerBase.h"
 #include "iPhone_OrientationSupport.h"
-
+#include "iPhone_Common.h"
+#import <Foundation/Foundation.h>
 
 static SplashScreen*            _splash      = nil;
 static SplashScreenController*  _controller  = nil;
@@ -39,11 +39,12 @@ static BOOL ShouldAutorotateToInterfaceOrientation_SplashImpl(id, SEL, UIInterfa
 
 - (void)updateOrientation:(ScreenOrientation)orient
 {
-    bool need2xSplash = ScreenScaleFactor() > 1.0f;
+    bool need2xSplash = [UIScreen mainScreen].scale > 1.0f;
 
     bool needOrientedSplash = false;
     bool needPortraitSplash = true;
 
+	const char* ipadSuffix = "";
     if (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone)
     {
         bool orientPortrait  = (orient == portrait || orient == portraitUpsideDown);
@@ -52,6 +53,7 @@ static BOOL ShouldAutorotateToInterfaceOrientation_SplashImpl(id, SEL, UIInterfa
         bool rotateToPortrait  = _canRotateToPortrait || _canRotateToPortraitUpsideDown;
         bool rotateToLandscape = _canRotateToLandscapeLeft || _canRotateToLandscapeRight;
 
+		ipadSuffix = "~ipad";
         needOrientedSplash = true;
         if (orientPortrait && rotateToPortrait)
             needPortraitSplash = true;
@@ -63,11 +65,11 @@ static BOOL ShouldAutorotateToInterfaceOrientation_SplashImpl(id, SEL, UIInterfa
             needPortraitSplash = false;
     }
 
-    const char* portraitSuffix  = needOrientedSplash ? "-Portrait" : "";
-    const char* landscapeSuffix = needOrientedSplash ? "-Landscape" : "";
-
-    const char* szSuffix        = need2xSplash ? "@2x" : "";
-    const char* orientSuffix    = needPortraitSplash ? portraitSuffix : landscapeSuffix;
+	const char* portraitSuffix	= needOrientedSplash ? "-Portrait" : "";
+	const char* landscapeSuffix	= needOrientedSplash ? "-Landscape" : "";
+	const char* orientSuffix	= needPortraitSplash ? portraitSuffix : landscapeSuffix;
+	const char* szSuffix		= need2xSplash ? "@2x" : "";
+	const char* iOS7Suffix		= _ios70orNewer ? "-700" : "";
 
     if( UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone )
     {
@@ -78,7 +80,7 @@ static BOOL ShouldAutorotateToInterfaceOrientation_SplashImpl(id, SEL, UIInterfa
     // we will use imageWithContentsOfFile so we need fully qualified path
     // we need to retain path because seems like imageWithContentsOfFile will be done on another thread
     // so we need to preserve path to be used with it until next runloop
-    NSString* imageName = [NSString stringWithFormat:@"Default%s%s", orientSuffix, szSuffix];
+	NSString* imageName = [NSString stringWithFormat:@"LaunchImage%s%s%s%s", iOS7Suffix, orientSuffix, szSuffix, ipadSuffix];
     NSString* imagePath = [[[[NSBundle mainBundle] pathForResource: imageName ofType: @"png"] retain] autorelease];
 
     [self unloadImage];
@@ -107,8 +109,8 @@ static BOOL ShouldAutorotateToInterfaceOrientation_SplashImpl(id, SEL, UIInterfa
     _canRotateToLandscapeRight      = [supportedOrientation containsObject: @"UIInterfaceOrientationLandscapeLeft"];
 
     _splash   = [[SplashScreen alloc] initWithFrame: [[UIScreen mainScreen] bounds]];
+    _splash.contentScaleFactor = [UIScreen mainScreen].scale;
 
-    SetScaleFactorFromScreen(_splash);
     if (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone)
     {
         _splash.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -126,7 +128,7 @@ static BOOL ShouldAutorotateToInterfaceOrientation_SplashImpl(id, SEL, UIInterfa
     [_splash updateOrientation: orient];
 
     ScreenOrientation viewOrient = UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone ? portrait : orient;
-    OrientView(_splash, viewOrient);
+    OrientView([SplashScreenController Instance], _splash, viewOrient);
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
@@ -138,7 +140,7 @@ static BOOL ShouldAutorotateToInterfaceOrientation_SplashImpl(id, SEL, UIInterfa
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
 {
     if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
-        OrientView(_splash, portrait);
+    	OrientView([SplashScreenController Instance], _splash, portrait);
 }
 
 - (BOOL)shouldAutorotate
@@ -210,4 +212,3 @@ ShouldAutorotateToInterfaceOrientation_SplashImpl(id self_, SEL _cmd, UIInterfac
 
     return false;
 }
-

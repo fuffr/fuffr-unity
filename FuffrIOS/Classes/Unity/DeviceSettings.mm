@@ -117,13 +117,6 @@ static void QueryDeviceID()
 			QueryVendorID();
 			_DeviceID = _VendorID;
 		}
-
-		// then ad id if smth went wrong
-		if(_DeviceID == nil)
-		{
-			QueryAdID();
-			_DeviceID = _ADID;
-		}
 	}
 }
 

@@ -9,9 +9,9 @@ ScreenOrientation       ConvertToUnityScreenOrientation(UIInterfaceOrientation h
 UIInterfaceOrientation  ConvertToIosScreenOrientation(ScreenOrientation orient);
 
 CGAffineTransform       TransformForOrientation(ScreenOrientation curOrient);
-CGRect                  ContentRectForOrientation(ScreenOrientation orient);
+CGAffineTransform		TransformBetweenOrientations(ScreenOrientation fromOrient, ScreenOrientation toOrient);
 
-void                    OrientView(UIView* view, ScreenOrientation target);
+void					OrientView(UIViewController* host, UIView* view, ScreenOrientation target);
 
 
 extern "C" __attribute__((visibility ("default"))) NSString * const kUnityViewWillRotate;

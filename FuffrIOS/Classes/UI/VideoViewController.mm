@@ -1,15 +1,22 @@
 
 #include "VideoViewController.h"
+#include "UnityAppController.h"
+#include "UnityView.h"
 #include "UnityViewControllerBase.h"
 #include "iPhone_OrientationSupport.h"
 
+
 @implementation UnityVideoViewController
+
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
+{
+	[GetAppController().unityView willRotateTo:ConvertToUnityScreenOrientation(toInterfaceOrientation, 0)];
+}
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
 {
-    extern void RequestNativeOrientation(ScreenOrientation targetOrient);
-
-    RequestNativeOrientation(ConvertToUnityScreenOrientation(self.interfaceOrientation,0));
+	[GetAppController().rootView layoutSubviews];
+	[GetAppController().unityView didRotate];
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event

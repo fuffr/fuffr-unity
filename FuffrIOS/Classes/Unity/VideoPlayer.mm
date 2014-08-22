@@ -123,6 +123,7 @@ static void* _ObservePlayerItemContext = (void*)0x2;
 {
     if(_player)
     {
+    	[[NSNotificationCenter defaultCenter] removeObserver:self name:AVAudioSessionRouteChangeNotification object:nil];
         [_player.currentItem removeObserver:self forKeyPath:@"status"];
         [_player removeObserver:self forKeyPath:@"currentItem"];
         [_player pause];
@@ -206,6 +207,11 @@ static void* _ObservePlayerItemContext = (void*)0x2;
     int curTex = CMVideoSampling_LastSampledTexture(&_videoSampling);
 
     CMTime time = [_player currentTime];
+
+	// if we have changed audio route and due to current category apple decided to pause playback - resume automatically
+	if(_AudioRouteWasChanged && _player.rate == 0.0f)
+		_player.rate = 1.0f;
+
     if(CMTimeCompare(time, _curTime) == 0 || _reader.status != AVAssetReaderStatusReading)
         return curTex;
 
@@ -262,6 +268,13 @@ static void* _ObservePlayerItemContext = (void*)0x2;
 {
     [delegate onPlayerDidFinishPlayingVideo];
 }
+
+static bool _AudioRouteWasChanged = false;
+- (void)audioRouteChanged:(NSNotification*)notification
+{
+	_AudioRouteWasChanged = true;
+}
+
 
 - (void)observeValueForKeyPath:(NSString*)path ofObject:(id)object change:(NSDictionary*)change context:(void*)context
 {
@@ -368,6 +381,14 @@ static void* _ObservePlayerItemContext = (void*)0x2;
             [_player performSelector:@selector(setAllowsExternalPlayback:) withObject:(id)NO];
         else if ([AVPlayer instancesRespondToSelector:@selector(setAllowsAirPlayVideo:)])
         	[_player performSelector:@selector(setAllowsAirPlayVideo:) withObject:(id)NO];
+
+		// we want to subscribe to route change notifications, for that we need audio session active
+		// and in case FMOD wasnt used up to this point it is still not active
+		[[AVAudioSession sharedInstance] setActive:YES error:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(audioRouteChanged:)
+											  name:AVAudioSessionRouteChangeNotification object:nil
+		];
+
     }
 
     if(_player.currentItem == _playerItem)

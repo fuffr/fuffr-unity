@@ -2,9 +2,10 @@
 #include "DisplayManager.h"
 #include "EAGLContextHelper.h"
 #include "GlesHelper.h"
-#include "UnityAppController.h"
-#include "iPhone_View.h"
 #include "UI/UnityView.h"
+
+#include "UnityAppController.h"
+#include "UI/UnityAppController+ViewHandling.h"
 
 #import <QuartzCore/QuartzCore.h>
 #import <CoreGraphics/CoreGraphics.h>

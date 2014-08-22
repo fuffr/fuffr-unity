@@ -41,4 +41,9 @@ void	AddViewControllerAllDefaultImpl(Class targetClass);
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation;
 @end
 
+// this is default view controller implementation
+@interface UnityDefaultViewController : UnityViewControllerBase {}
+@end
+
+
 #endif
