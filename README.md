@@ -6,5 +6,7 @@ You need to assemble the file FuffrIOS/Libraries/libiPhone-lib.a to build the Xc
 
 Do this assemble the file, you only need to do this once (or when the lib file is updated):
 
-cd FuffrIOS
-./merge_libiPhone.sh
+    cd FuffrIOS
+    ./merge_libiPhone.sh
+
+The header search path of the Xcode project is currently hard-coded.
