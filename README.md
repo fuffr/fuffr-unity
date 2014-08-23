@@ -31,7 +31,7 @@ When you modify the Unity project and rebuild the Xcode project from Unity, you 
 
 ## Linking With FuffrLib in Xcode
 
-Here is a summary fo the settings/modifications needed to link a Unity generated Xcode project with FuffrLib:
+Here is a summary fo the settings/modifications needed to link your own Unity generated Xcode project with FuffrLib:
 
 * Drag the FuffrLib Xcode project file into the Unity Xcode project.
 * Under "Build Phases/Link Binary With Libraries" click "+" and add "libFiffrLib.a" and "CoreBluetooth.framework".
@@ -40,4 +40,4 @@ Here is a summary fo the settings/modifications needed to link a Unity generated
 * Under "Build Settings/Linking/Other Linker Flags" add "-ObjC" (without the quote marks).
 * Modify the file "Classes/UnityAppController.mm" in the Unity Xcode project to setup Fuffr touch events and send events to unity. The modifications are found in this repository and are marked with "// FUFFR" comments. (This code should go in a separate file, but for now all code is added to this file.)
 
-
+Note that the above has already been done with the project in this repository!
