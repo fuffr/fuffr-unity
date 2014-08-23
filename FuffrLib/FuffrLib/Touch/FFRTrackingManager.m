@@ -208,7 +208,7 @@ static void logTouches(NSString* label, NSSet* touches)
 
 	NSSet* touches = [NSSet setWithObject: touch];
 
-	//logTouches(@"FFRTracking began", touches);
+	//NSLog(@"FFRTracking began: %@", touches);
 
 	// Notify tracking observers.
 	dispatch_async(dispatch_get_main_queue(),

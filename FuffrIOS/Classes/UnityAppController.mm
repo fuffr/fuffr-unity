@@ -294,35 +294,69 @@ void UnityInitJoysticks();
 		sides: (FFRSide)(FFRSideLeft | FFRSideRight)];
 }
 
-
+// FUFFR
 - (void) touchesBegan: (NSSet*)touches
 {
-	UnitySendMessage("FuffrCube", "fuffrTouchEvent", "C# Touch Began");
-
-	for (FFRTouch* touch in touches)
-	{
-		NSLog(@"Touch began");
-	}
+	[self sendUnityTouchEvent: 1 withTouches: touches];
 }
 
+// FUFFR
 - (void) touchesMoved: (NSSet*)touches
 {
-	UnitySendMessage("FuffrCube", "fuffrTouchEvent", "C# Touch Moved");
-
-	for (FFRTouch* touch in touches)
-	{
-		NSLog(@"Touch moved");
-	}
+	[self sendUnityTouchEvent: 2 withTouches: touches];
 }
 
+// FUFFR
 - (void) touchesEnded: (NSSet*)touches
 {
-	UnitySendMessage("FuffrCube", "fuffrTouchEvent", "C# Touch Ended");
+	[self sendUnityTouchEvent: 3 withTouches: touches];
+}
 
+// FUFFR
+- (void) sendUnityTouchEvent: (int) touchPhase withTouches: (NSSet*) touches
+{
+	NSString* message = [NSString stringWithFormat:
+		@"{\"touchPhase\":%i,\"touches\":%@}",
+		touchPhase,
+		[self touchesAsJSONArray: touches]];
+	UnitySendMessage("FuffrTouchManager", "fuffrTouchEvent", [message UTF8String]);
+}
+
+// FUFFR
+- (NSString*) touchesAsJSONArray: (NSSet*) touches
+{
+	NSMutableString* arrayString = [NSMutableString stringWithCapacity: 300];
+
+	[arrayString appendString: @"["];
+
+	int counter = (int)touches.count;
 	for (FFRTouch* touch in touches)
 	{
-		NSLog(@"Touch ended");
+		[arrayString appendString: [self touchAsJSONObject: touch]];
+		if (--counter > 0)
+		{
+			[arrayString appendString: @","];
+		}
 	}
+
+	[arrayString appendString: @"]"];
+
+	return arrayString;
+}
+
+// FUFFR
+- (NSString*) touchAsJSONObject: (FFRTouch*)touch
+{
+	return [NSString stringWithFormat:
+		@"{\"id\":%d,\"side\":%d,\"x\":%f,\"y\":%f,\"prevx\":%f,\"prevy\":%f,\"normx\":%f,\"normy\":%f}",
+		(int)touch.identifier,
+		touch.side,
+		touch.location.x,
+		touch.location.y,
+		touch.previousLocation.x,
+		touch.previousLocation.y,
+		touch.normalizedLocation.x,
+		touch.normalizedLocation.y];
 }
 
 @end
