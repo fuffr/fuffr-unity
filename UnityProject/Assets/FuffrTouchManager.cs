@@ -93,7 +93,7 @@ public class FuffrTouchHandler
 	public void fuffrTouchEvent(string eventData)
 	{
 		// Debug log.
-		Debug.Log ("@@@ FuffrTouchEvent: " + eventData);
+		//Debug.Log ("@@@ FuffrTouchEvent: " + eventData);
 
 		try
 		{
