@@ -635,6 +635,7 @@
 		219718E918D60662007B6E84 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = armv7;
 				DSTROOT = /tmp/FuffrLib.dst;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -656,6 +657,7 @@
 		219718EA18D60662007B6E84 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = armv7;
 				DSTROOT = /tmp/FuffrLib.dst;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
