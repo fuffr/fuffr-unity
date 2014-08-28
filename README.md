@@ -13,9 +13,23 @@ The file "FuffrTouchManager.cs" contains classes for touch handling:
 * FuffrTouchEvent - data structure that holds information about a touch event.
 * FuffrTouchDelegate  touch delegate type used to listen to touch events.
 
-## iOS Code
+## iOS Code - setting active sides and number of touches
 
 The Fuffr modifications for the Unity Xcode project are in file: FuffrIOS/Classes/UnityAppController.mm
+
+To set the active sides of the Fuffr case and the number of touches per side, modify the following values in the method **setupFuffr**:
+
+	// Set active sides and number of touches per side.
+	FFRSide activeSides = (FFRSide) (FFRSideLeft | FFRSideRight);
+	NSNumber* touchesPerSide = @1;
+
+For example, to enable two touches on all four sides, you would use:
+
+	// Set active sides and number of touches per side.
+	FFRSide activeSides = (FFRSide) (FFRSideLeft | FFRSideRight | FFRSideTop | FFRSideBottom);
+	NSNumber* touchesPerSide = @2;
+
+## Merging/splitting the Unity Xcode lib file
 
 You need to assemble the file FuffrIOS/Libraries/libiPhone-lib.a to build the Xcode project. It is split into sveral parts, beacuse it is too big to be put on GitHub.
 
@@ -33,7 +47,9 @@ When you modify the Unity project and rebuild the Xcode project from Unity, you 
 
 ## Linking With FuffrLib in Xcode
 
-Here is a summary fo the settings/modifications needed to link your own Unity generated Xcode project with FuffrLib:
+Note that the following has already been done with the Xcode project in this repository! You only need to do this with new projects generated from Unity.
+
+Here is a summary of the settings/modifications needed to link a Unity generated Xcode project with FuffrLib:
 
 * Drag the FuffrLib Xcode project file into the Unity Xcode project.
 * Under "Build Phases/Link Binary With Libraries" click "+" and add "libFiffrLib.a" and "CoreBluetooth.framework".
@@ -42,4 +58,4 @@ Here is a summary fo the settings/modifications needed to link your own Unity ge
 * Under "Build Settings/Linking/Other Linker Flags" add "-ObjC" (without the quote marks).
 * Modify the file "Classes/UnityAppController.mm" in the Unity Xcode project to setup Fuffr touch events and send events to unity. The modifications are found in this repository and are marked with "// FUFFR" comments. (This code should go in a separate file, but for now all code is added to this file.)
 
-Note that the above has already been done with the project in this repository!
+

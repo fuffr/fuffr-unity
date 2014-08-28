@@ -267,6 +267,10 @@ void UnityInitJoysticks();
 	// Get a reference to the touch manager.
 	FFRTouchManager* manager = [FFRTouchManager sharedManager];
 
+	// Set active sides and number of touches per side.
+	FFRSide activeSides = (FFRSide) (FFRSideLeft | FFRSideRight);
+	NSNumber* touchesPerSide = @1;
+
 	[manager
 		onFuffrConnected:
 		^{
@@ -275,8 +279,8 @@ void UnityInitJoysticks();
 			^{
 				// Sensor is available, set active sides.
 				[[FFRTouchManager sharedManager]
-					enableSides: (FFRSide) (FFRSideLeft | FFRSideRight)
-					touchesPerSide: @1];
+					enableSides: activeSides
+					touchesPerSide: touchesPerSide];
 			}];
 		}
 		onFuffrDisconnected:
@@ -291,7 +295,7 @@ void UnityInitJoysticks();
 		touchBegan: @selector(touchesBegan:)
 		touchMoved: @selector(touchesMoved:)
 		touchEnded: @selector(touchesEnded:)
-		sides: (FFRSide)(FFRSideLeft | FFRSideRight)];
+		sides: activeSides];
 }
 
 // FUFFR
@@ -419,6 +423,6 @@ void UnityInitTrampoline()
     // Fix home directory environment variable.
     const char *newHomeDirectory = ([[NSHomeDirectory() stringByAppendingPathComponent:@"Documents"] UTF8String]);
     setenv("XDG_CONFIG_HOME", newHomeDirectory, 1);
-    
+
 	UnityInitJoysticks();
 }
