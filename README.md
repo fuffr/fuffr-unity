@@ -6,28 +6,11 @@ Unity project with iOS bindnings for Fuffr events.
 
 The Unity project contains a GameObject with a script called "FuffrCube.cs" that includes a simple test of the touch event handling.
 
-The file "FuffrTouchManager.cs" contains classes for touch handling:
+File "FuffrTouchHandler.cs" contains following:
 
-* FuffrTouchManager - receives touch events from native code.
 * FuffrTouchHandler - singleton class you use to register touch delegates.
 * FuffrTouchEvent - data structure that holds information about a touch event.
 * FuffrTouchDelegate  touch delegate type used to listen to touch events.
-
-## iOS Code - setting active sides and number of touches
-
-The Fuffr modifications for the Unity Xcode project are in file: FuffrIOS/Classes/UnityAppController.mm
-
-To set the active sides of the Fuffr case and the number of touches per side, modify the following values in the method **setupFuffr**:
-
-	// Set active sides and number of touches per side.
-	FFRSide activeSides = (FFRSide) (FFRSideLeft | FFRSideRight);
-	NSNumber* touchesPerSide = @1;
-
-For example, to enable two touches on all four sides, you would use:
-
-	// Set active sides and number of touches per side.
-	FFRSide activeSides = (FFRSide) (FFRSideLeft | FFRSideRight | FFRSideTop | FFRSideBottom);
-	NSNumber* touchesPerSide = @2;
 
 ## Merging/splitting the Unity Xcode lib file
 
@@ -56,6 +39,4 @@ Here is a summary of the settings/modifications needed to link a Unity generated
 * Under "Build Settings/Search Paths/Header Search Paths/Debug" add "$(BUILT_PRODUCTS_DIR)/Debug-iphoneos/include" (including the quote marks).
 * Under "Build Settings/Search Paths/Header Search Paths/Release" add "$(BUILT_PRODUCTS_DIR)/Release-iphoneos/include" (including the quote marks).
 * Under "Build Settings/Linking/Other Linker Flags" add "-ObjC" (without the quote marks).
-* Modify the file "Classes/UnityAppController.mm" in the Unity Xcode project to setup Fuffr touch events and send events to unity. The modifications are found in this repository and are marked with "// FUFFR" comments. (This code should go in a separate file, but for now all code is added to this file.)
-
 
