@@ -14,6 +14,11 @@ public class FuffrCube : MonoBehaviour
 		//FuffrTouchHandler.Instance.fuffrTouchEvent(json);
 	}
 
+	void OnDestroy()
+	{
+		FuffrTouchHandler.Instance.TouchesMoved -= TouchesMovedHandler;
+	}
+
 	void Update()
 	{
 	}
