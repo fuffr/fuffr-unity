@@ -18,7 +18,7 @@ public class FuffrCube : MonoBehaviour
 	{
 	}
 
-	public void TouchesMovedHandler(List<FuffrTouchEvent> touches)
+	public void TouchesMovedHandler(FuffrTouchEvent[] touches)
 	{
 		// Debug log.
         //foreach (FuffrTouchEvent touch in touches)
