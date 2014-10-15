@@ -33,9 +33,6 @@
 #include "Unity/GlesHelper.h"
 #include "PluginBase/AppDelegateListener.h"
 
-// FUFFR
-#import "FuffrLib/FFRTouchManager.h"
-
 extern "C" void UnityRunUnitTests();
 
 bool	_ios42orNewer			= false;
@@ -186,9 +183,6 @@ void UnityInitJoysticks();
 	[self preStartUnity];
 	UnityInitApplicationNoGraphics([[[NSBundle mainBundle] bundlePath]UTF8String]);
 
-	// FUFFR
-//	[self setupFuffr];
-
 	return YES;
 }
 
@@ -263,111 +257,6 @@ void UnityInitJoysticks();
 	[self releaseViewHierarchy];
 	[super dealloc];
 }
-
-// FUFFR
-- (void) setupFuffr
-{
-	NSLog(@"Scanning for Fuffr...");
-
-	// Get a reference to the touch manager.
-	FFRTouchManager* manager = [FFRTouchManager sharedManager];
-
-	// Set active sides and number of touches per side.
-	FFRSide activeSides = (FFRSide) (FFRSideLeft | FFRSideRight);
-	NSNumber* touchesPerSide = @1;
-
-	[manager
-		onFuffrConnected:
-		^{
-			NSLog(@"Fuffr Connected");
-			[manager useSensorService:
-			^{
-				// Sensor is available, set active sides.
-				[[FFRTouchManager sharedManager]
-					enableSides: activeSides
-					touchesPerSide: touchesPerSide];
-			}];
-		}
-		onFuffrDisconnected:
-		^{
-			NSLog(@"Fuffr Disconnected");
-		}];
-
-	// Register methods for touch events. Here the side constants are
-	// bit-or:ed to capture touches on all four sides.
-	[manager
-		addTouchObserver: self
-		touchBegan: @selector(touchesBegan:)
-		touchMoved: @selector(touchesMoved:)
-		touchEnded: @selector(touchesEnded:)
-		sides: activeSides];
-}
-
-// FUFFR
-- (void) touchesBegan: (NSSet*)touches
-{
-	[self sendUnityTouchEvent: 1 withTouches: touches];
-}
-
-// FUFFR
-- (void) touchesMoved: (NSSet*)touches
-{
-	[self sendUnityTouchEvent: 2 withTouches: touches];
-}
-
-// FUFFR
-- (void) touchesEnded: (NSSet*)touches
-{
-	[self sendUnityTouchEvent: 3 withTouches: touches];
-}
-
-// FUFFR
-- (void) sendUnityTouchEvent: (int) touchPhase withTouches: (NSSet*) touches
-{
-	NSString* message = [NSString stringWithFormat:
-		@"{\"touchPhase\":%i,\"touches\":%@}",
-		touchPhase,
-		[self touchesAsJSONArray: touches]];
-	UnitySendMessage("FuffrTouchManager", "fuffrTouchEvent", [message UTF8String]);
-}
-
-// FUFFR
-- (NSString*) touchesAsJSONArray: (NSSet*) touches
-{
-	NSMutableString* arrayString = [NSMutableString stringWithCapacity: 300];
-
-	[arrayString appendString: @"["];
-
-	int counter = (int)touches.count;
-	for (FFRTouch* touch in touches)
-	{
-		[arrayString appendString: [self touchAsJSONObject: touch]];
-		if (--counter > 0)
-		{
-			[arrayString appendString: @","];
-		}
-	}
-
-	[arrayString appendString: @"]"];
-
-	return arrayString;
-}
-
-// FUFFR
-- (NSString*) touchAsJSONObject: (FFRTouch*)touch
-{
-	return [NSString stringWithFormat:
-		@"{\"id\":%d,\"side\":%d,\"x\":%f,\"y\":%f,\"prevx\":%f,\"prevy\":%f,\"normx\":%f,\"normy\":%f}",
-		(int)touch.identifier,
-		touch.side,
-		touch.location.x,
-		touch.location.y,
-		touch.previousLocation.x,
-		touch.previousLocation.y,
-		touch.normalizedLocation.x,
-		touch.normalizedLocation.y];
-}
-
 @end
 
 
