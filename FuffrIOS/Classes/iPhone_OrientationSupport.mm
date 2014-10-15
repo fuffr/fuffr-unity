@@ -80,7 +80,10 @@ void OrientView(UIViewController* host, UIView* view, ScreenOrientation to)
 	ScreenOrientation fromController = ConvertToUnityScreenOrientation(host.interfaceOrientation,0);
 
 	// before ios8 view transform is relative to portrait, while on ios8 it is relative to window/controller
-	CGAffineTransform transform = _ios80orNewer ? TransformBetweenOrientations(fromController, to) : TransformForOrientation(to);
+	// caveat: if app was built with pre-ios8 sdk it will hit "backward compatibility" path
+	const bool newRotationLogic = UNITY_IOS8_ORNEWER_SDK && _ios80orNewer;
+
+	CGAffineTransform transform = newRotationLogic ? TransformBetweenOrientations(fromController, to) : TransformForOrientation(to);
 
 	// this is for unity-inited orientation. In that case we need to manually adjust bounds if changing portrait/landscape
 	// the easiest way would be to manually rotate current bounds (to acknowledge the fact that we do NOT rotate controller itself)

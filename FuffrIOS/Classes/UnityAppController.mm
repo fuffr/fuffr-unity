@@ -232,6 +232,11 @@ void UnityInitJoysticks();
 
 		extern void UnityStopVideoIfPlaying();
 		UnityStopVideoIfPlaying();
+
+		// Force player to do one more frame, so scripts get a chance to render custom screen for
+		// minimized app in task manager.
+		UnityForcedPlayerLoop();
+		[self repaintDisplayLink];
 	}
 
 	_didResignActive = true;
