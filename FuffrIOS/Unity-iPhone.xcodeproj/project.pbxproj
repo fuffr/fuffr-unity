@@ -11,6 +11,7 @@
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		21E4A33319A754E800055D45 /* libFuffrLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 21E4A33019A754BE00055D45 /* libFuffrLib.a */; };
 		21E4A33519A754EE00055D45 /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 21E4A33419A754EE00055D45 /* CoreBluetooth.framework */; };
+		55E7720819ACD1D80063BBC3 /* FFRUnityBridge.mm in Sources */ = {isa = PBXBuildFile; fileRef = 55E7720719ACD1D80063BBC3 /* FFRUnityBridge.mm */; };
 		5623C57617FDCB0800090B9E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		5623C57717FDCB0800090B9E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 830B5C100E5ED4C100C7819F /* UIKit.framework */; };
 		5623C57D17FDCB0900090B9E /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 5623C57B17FDCB0900090B9E /* InfoPlist.strings */; };
@@ -112,6 +113,8 @@
 		1D6058910D05DD3D006BFB54 /* ProductName.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ProductName.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		21E4A32A19A754BE00055D45 /* FuffrLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = FuffrLib.xcodeproj; path = ../FuffrLib/FuffrLib.xcodeproj; sourceTree = "<group>"; };
 		21E4A33419A754EE00055D45 /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
+		55E7720619ACD1D80063BBC3 /* FFRUnityBridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FFRUnityBridge.h; path = Fuffr/FFRUnityBridge.h; sourceTree = "<group>"; };
+		55E7720719ACD1D80063BBC3 /* FFRUnityBridge.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = FFRUnityBridge.mm; path = Fuffr/FFRUnityBridge.mm; sourceTree = "<group>"; };
 		5623C57317FDCB0800090B9E /* ProductName.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ProductName.octest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5623C57A17FDCB0900090B9E /* Unity-iPhone Tests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Unity-iPhone Tests-Info.plist"; sourceTree = "<group>"; };
 		5623C57C17FDCB0900090B9E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -192,7 +195,7 @@
 		D82DCFBB0E8000A5005D6AD8 /* main.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = main.mm; path = Classes/main.mm; sourceTree = SOURCE_ROOT; };
 		D82DCFBD0E8000A5005D6AD8 /* RegisterClasses.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RegisterClasses.cpp; path = Classes/RegisterClasses.cpp; sourceTree = SOURCE_ROOT; };
 		D82DCFBE0E8000A5005D6AD8 /* RegisterClasses.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RegisterClasses.h; path = Classes/RegisterClasses.h; sourceTree = SOURCE_ROOT; };
-		D8A1C7000E80637F100160D4 /* Assembly-CSharp.dll.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; name = Assembly-CSharp.dll.s; path = Libraries/Assembly-CSharp.dll.s; sourceTree = SOURCE_ROOT; };
+		D8A1C7000E80637F100160D4 /* Assembly-CSharp.dll.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; name = "Assembly-CSharp.dll.s"; path = "Libraries/Assembly-CSharp.dll.s"; sourceTree = SOURCE_ROOT; };
 		D8A1C7001E80637F100160D4 /* Mono.Security.dll.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; name = Mono.Security.dll.s; path = Libraries/Mono.Security.dll.s; sourceTree = SOURCE_ROOT; };
 		D8A1C7002E80637F100160D4 /* System.dll.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; name = System.dll.s; path = Libraries/System.dll.s; sourceTree = SOURCE_ROOT; };
 		D8A1C7003E80637F100160D4 /* UnityEngine.dll.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; name = UnityEngine.dll.s; path = Libraries/UnityEngine.dll.s; sourceTree = SOURCE_ROOT; };
@@ -267,6 +270,7 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
+				55E7720319ACD1920063BBC3 /* FuffrUnityBridge */,
 				56C56C9717D6015100616839 /* Images.xcassets */,
 				D82DCFB50E8000A5005D6AD8 /* Classes */,
 				5623C57817FDCB0800090B9E /* Unity-iPhone Tests */,
@@ -303,6 +307,15 @@
 				830B5C100E5ED4C100C7819F /* UIKit.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		55E7720319ACD1920063BBC3 /* FuffrUnityBridge */ = {
+			isa = PBXGroup;
+			children = (
+				55E7720619ACD1D80063BBC3 /* FFRUnityBridge.h */,
+				55E7720719ACD1D80063BBC3 /* FFRUnityBridge.mm */,
+			);
+			name = FuffrUnityBridge;
 			sourceTree = "<group>";
 		};
 		5623C57817FDCB0800090B9E /* Unity-iPhone Tests */ = {
@@ -468,7 +481,7 @@
 			name = "Unity-iPhone Tests";
 			productName = "Unity-iPhone Tests";
 			productReference = 5623C57317FDCB0800090B9E /* ProductName.octest */;
-			productType = "com.apple.product-type.bundle";
+			productType = "com.apple.product-type.bundle.ocunit-test";
 		};
 /* End PBXNativeTarget section */
 
@@ -566,6 +579,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				55E7720819ACD1D80063BBC3 /* FFRUnityBridge.mm in Sources */,
 				D82DCFC30E8000A5005D6AD8 /* main.mm in Sources */,
 				D82DCFC50E8000A5005D6AD8 /* RegisterClasses.cpp in Sources */,
 				D8A1C7000E80637F000160D4 /* Assembly-CSharp.dll.s in Sources */,

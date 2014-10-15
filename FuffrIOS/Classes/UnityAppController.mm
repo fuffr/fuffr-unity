@@ -187,7 +187,7 @@ void UnityInitJoysticks();
 	UnityInitApplicationNoGraphics([[[NSBundle mainBundle] bundlePath]UTF8String]);
 
 	// FUFFR
-	[self setupFuffr];
+//	[self setupFuffr];
 
 	return YES;
 }
