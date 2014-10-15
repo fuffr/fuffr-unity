@@ -7,7 +7,7 @@ extern "C"
 	typedef void* gpointer;
 	typedef int gboolean;
 #if !(TARGET_IPHONE_SIMULATOR)
-	const char*			UnityIPhoneRuntimeVersion = "4.5.3f3";
+	const char*			UnityIPhoneRuntimeVersion = "4.5.4f1";
 	void				mono_dl_register_symbol (const char* name, void *addr);
 	extern int 			mono_ficall_flag;
 	void				mono_aot_register_module(gpointer *aot_info);
@@ -18,6 +18,9 @@ extern "C"
 	extern gpointer*	mono_aot_module_UnityEngine_info; // UnityEngine.dll
 	extern gpointer*	mono_aot_module_mscorlib_info; // mscorlib.dll
 #endif // !(TARGET_IPHONE_SIMULATOR)
+	void	_RegisterRecieveDeviceMessageCallback();
+	void	_StartTestTimer();
+	void	_StopTestTimer();
 	void	UnityNSObject_RetainObject();
 	void	UnityNSObject_ReleaseObject();
 	void	UnityNSError_Code();
@@ -37,6 +40,9 @@ void RegisterMonoModules()
 	mono_aot_register_module(mono_aot_module_UnityEngine_info);
 	mono_aot_register_module(mono_aot_module_mscorlib_info);
 
+	mono_dl_register_symbol("_RegisterRecieveDeviceMessageCallback", (void*)&_RegisterRecieveDeviceMessageCallback);
+	mono_dl_register_symbol("_StartTestTimer", (void*)&_StartTestTimer);
+	mono_dl_register_symbol("_StopTestTimer", (void*)&_StopTestTimer);
 	mono_dl_register_symbol("UnityNSObject_RetainObject", (void*)&UnityNSObject_RetainObject);
 	mono_dl_register_symbol("UnityNSObject_ReleaseObject", (void*)&UnityNSObject_ReleaseObject);
 	mono_dl_register_symbol("UnityNSError_Code", (void*)&UnityNSError_Code);
@@ -2750,6 +2756,10 @@ void RegisterAllStrippedInternalCalls ()
 	Register_UnityEngine_Terrain_Internal_GetDrawTreesAndFoliage ();
 	void Register_UnityEngine_Terrain_Internal_SetDrawTreesAndFoliage ();
 	Register_UnityEngine_Terrain_Internal_SetDrawTreesAndFoliage ();
+	void Register_UnityEngine_Terrain_Internal_GetCollectDetailPatches ();
+	Register_UnityEngine_Terrain_Internal_GetCollectDetailPatches ();
+	void Register_UnityEngine_Terrain_Internal_SetCollectDetailPatches ();
+	Register_UnityEngine_Terrain_Internal_SetCollectDetailPatches ();
 	void Register_UnityEngine_Terrain_INTERNAL_CALL_Internal_SampleHeight ();
 	Register_UnityEngine_Terrain_INTERNAL_CALL_Internal_SampleHeight ();
 	void Register_UnityEngine_Terrain_Internal_ApplyDelayedHeightmapModification ();
