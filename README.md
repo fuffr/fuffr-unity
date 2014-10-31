@@ -5,13 +5,13 @@ Unity project with iOS bindnings for Fuffr events.
 ## Unity Code
 
 The Unity project contains a GameObject with a script called "FuffrCube.cs" that includes a simple test of the touch event handling.
-
+<!--
 File "FuffrTouchHandler.cs" contains following:
 
 * FuffrTouchHandler - singleton class you use to register touch delegates.
 * FuffrTouchEvent - data structure that holds information about a touch event.
 * FuffrTouchDelegate  touch delegate type used to listen to touch events.
-
+-->
 ## Merging/splitting the Unity Xcode lib file
 
 You need to assemble the file FuffrIOS/Libraries/libiPhone-lib.a to build the Xcode project. It is split into sveral parts, beacuse it is too big to be put on GitHub.
